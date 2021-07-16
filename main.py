@@ -27,6 +27,8 @@ def handle_data(received_data):
     mac = received_data[0]
     payload = received_data[1]
 
+    ruuvitag_sensor.log.log.info(f"Received from {mac}.")
+
     # Create a new point with tags for the device and data format
     # Get data from data and insert into point
     p = Point("temperature").tag("device", mac)\
