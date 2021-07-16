@@ -11,8 +11,6 @@ client = InfluxDBClient.from_env_properties()
 
 bucket = os.environ.get('BUCKET', 'Ruuvi')
 
-write_api = client.write_api(write_options=SYNCHRONOUS)
-
 
 def handle_data(received_data):
     """
@@ -41,7 +39,9 @@ def handle_data(received_data):
         .field("tagID", payload.get('tagID'))\
         .field("rssi", payload.get('rssi'))
 
-    write_api.write(bucket=bucket, record=p)
+    # Send data to InfluxDB
+    with client.write_api(write_options=SYNCHRONOUS) as write_api:
+        write_api.write(bucket=bucket, record=p)
 
 
 if __name__ == "__main__":
