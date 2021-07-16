@@ -9,7 +9,8 @@ import ruuvitag_sensor.log
 
 ruuvitag_sensor.log.enable_console()
 
-sensors = os.environ.get('SENSORS', '').split(" ")
+sensors = os.environ.get('SENSORS', '')\
+    .removeprefix('"').removesuffix('"').split(" ")
 
 client = InfluxDBClient.from_env_properties()
 
