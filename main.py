@@ -5,6 +5,10 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 from ruuvitag_sensor.ruuvi import RuuviTagSensor
 
+import ruuvitag_sensor.log
+
+ruuvitag_sensor.log.enable_console()
+
 sensors = os.environ.get('SENSORS', '').split(" ")
 
 client = InfluxDBClient.from_env_properties()
