@@ -1,6 +1,10 @@
-FROM python:3.9-alpine
+FROM python:3.9-slim
 
 LABEL maintainer="Max Mecklin <max@meckl.in>"
+
+RUN apt-get update && \
+    apt-get -y install gcc musl-dev python3-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY . /app
 
