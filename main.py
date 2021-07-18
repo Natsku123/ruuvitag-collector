@@ -34,7 +34,7 @@ def handle_sigterm(sig, frame):
 signal.signal(signal.SIGTERM, handle_sigterm)
 
 
-def handle_data(received_data: dict):
+async def handle_data(received_data: dict):
     """
     Handle data from a Ruuvi tag and send it to InfluxDB.
 
