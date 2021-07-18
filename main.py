@@ -17,17 +17,12 @@ import ruuvitag_sensor.log
 
 ruuvitag_sensor.log.enable_console()
 
-ruuvitag_sensor.log.log.setLevel(logging.DEBUG)
-
 sensors = os.environ.get('SENSORS', '')\
     .removeprefix('"').removesuffix('"').split(" ")
 
 client = InfluxDBClient.from_env_properties()
 
 bucket = os.environ.get('BUCKET', 'Ruuvi')
-
-
-all_data = {}
 
 
 def handle_sigterm(sig, frame):
@@ -73,22 +68,14 @@ async def handle_data(received_data: dict):
 async def handle_queue(queue):
     try:
         while True:
-            ruuvitag_sensor.log.log.debug(f"Waiting for items...")
-
             if not queue.empty():
-                ruuvitag_sensor.log.log.debug(f"New data in queue!")
-
                 funcs = []
                 while not queue.empty():
                     update_data = queue.get()
-                    ruuvitag_sensor.log.log.debug(f"Sending data: {update_data}")
                     funcs.append(asyncio.create_task(handle_data(update_data)))
-                    if len(funcs) == 50:
-                        continue
+
                 if funcs:
-                    ruuvitag_sensor.log.log.debug(f"Start waiting for tasks...")
                     await asyncio.wait(funcs)
-                    ruuvitag_sensor.log.log.debug(f"Data sent.")
             else:
                 await asyncio.sleep(0.2)
     except KeyboardInterrupt:
@@ -97,17 +84,13 @@ async def handle_queue(queue):
 
 def background_process(queue):
     def handle_new_data(new_data):
-        ruuvitag_sensor.log.log.debug(f"Got data: {new_data}")
         current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
         sensor_mac = new_data[0]
         sensor_data = new_data[1]
 
-        if sensor_mac not in all_data or \
-                all_data[sensor_mac]['data'] != sensor_data:
-            update_data = {'mac': sensor_mac, 'data': sensor_data,
-                           'timestamp': current_time}
-            all_data[sensor_mac] = update_data
-            queue.put(update_data)
+        update_data = {'mac': sensor_mac, 'data': sensor_data,
+                       'timestamp': current_time}
+        queue.put(update_data)
 
     RuuviTagSensor.get_datas(handle_new_data, macs=sensors)
 
