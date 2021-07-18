@@ -60,7 +60,7 @@ def handle_data(received_data: dict):
         .field("measurementSequenceNumber", payload.get('measurement_sequence_number'))\
         .field("tagID", payload.get('tagID'))\
         .field("rssi", payload.get('rssi'))\
-        .field("time", received_data.get('timestamp', datetime.utcnow()).strftime('%Y-%m-%dT%H:%M:%SZ'))
+        .field("time", received_data.get('timestamp', datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')))
     # Send data to InfluxDB
     with client.write_api(write_options=ASYNCHRONOUS) as write_api:
         res = write_api.write(bucket=bucket, record=p)
@@ -87,14 +87,14 @@ async def handle_queue(queue):
 
 def background_process(queue):
     def handle_new_data(new_data):
-        current_time = datetime.now()
+        current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
         sensor_mac = new_data[0]
         sensor_data = new_data[1]
 
         if sensor_mac not in all_data or \
                 all_data[sensor_mac]['data'] != sensor_data:
             update_data = {'mac': sensor_mac, 'data': sensor_data,
-                           'timestamp': current_time.isoformat()}
+                           'timestamp': current_time}
             all_data[sensor_mac] = update_data
             queue.put(update_data)
     RuuviTagSensor.get_datas(handle_new_data, macs=sensors)
