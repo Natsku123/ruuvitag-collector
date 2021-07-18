@@ -74,9 +74,9 @@ async def handle_queue(queue):
                 funcs = []
                 while not queue.empty():
                     update_data = queue.get()
-                    funcs.append(handle_data(update_data))
-                    if len(funcs) > 50:
-                        break
+                    funcs.append(asyncio.create_task(handle_data(update_data)))
+                    if len(funcs) == 50:
+                        continue
                 if funcs:
                     await asyncio.wait(funcs)
             else:
@@ -97,6 +97,7 @@ def background_process(queue):
                            'timestamp': current_time}
             all_data[sensor_mac] = update_data
             queue.put(update_data)
+
     RuuviTagSensor.get_datas(handle_new_data, macs=sensors)
 
 
