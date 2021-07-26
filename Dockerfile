@@ -10,6 +10,6 @@ COPY . /app
 
 WORKDIR /app
 
-RUN pip3.9 install -r requirements.txt
+RUN pip3.8 install -r requirements.txt
 
 CMD ["python3.9", "main.py"]
