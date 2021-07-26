@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.9-slim
 
 LABEL maintainer="Max Mecklin <max@meckl.in>"
 
@@ -10,6 +10,6 @@ COPY . /app
 
 WORKDIR /app
 
-RUN pip3.8 install -r requirements.txt
+RUN pip3.9 install -r requirements.txt
 
-CMD ["python3.8", "main.py"]
+CMD ["python3.9", "main.py"]
