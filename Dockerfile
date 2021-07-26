@@ -12,4 +12,7 @@ WORKDIR /app
 
 RUN pip3.9 install -r requirements.txt
 
+RUN pip3.9 install wheel
+RUN pip3.9 install git+https://github.com/ttu/ruuvitag-sensor.git@migrate-rx-to-v3
+
 CMD ["python3.9", "main.py"]

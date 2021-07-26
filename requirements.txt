@@ -1,2 +1,2 @@
-ruuvitag-sensor~=1.2.0
-influxdb-client
+#ruuvitag-sensor~=1.2.0
+influxdb-client[ciso]~=1.19.0
