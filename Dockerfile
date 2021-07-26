@@ -12,4 +12,4 @@ WORKDIR /app
 
 RUN pip3.8 install -r requirements.txt
 
-CMD ["python3.9", "main.py"]
+CMD ["python3.8", "main.py"]
