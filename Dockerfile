@@ -3,7 +3,7 @@ FROM python:3.9-slim
 LABEL maintainer="Max Mecklin <max@meckl.in>"
 
 RUN apt-get update && \
-    apt-get -y install gcc musl-dev python3-dev sudo bluez bluez-hcidump && \
+    apt-get -y install git gcc musl-dev python3-dev sudo bluez bluez-hcidump && \
     rm -rf /var/lib/apt/lists/*
 
 COPY . /app
