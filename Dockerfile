@@ -13,6 +13,6 @@ WORKDIR /app
 RUN pip3.11 install -r requirements.txt
 
 RUN pip3.11 install wheel
-RUN pip3.11 install git+https://github.com/ttu/ruuvitag-sensor.git@migrate-rx-to-v3
+RUN pip3.11 install git+https://github.com/ttu/ruuvitag-sensor.git
 
 CMD ["python3.11", "main.py"]
