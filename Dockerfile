@@ -3,7 +3,7 @@ FROM python:3.11-slim-buster
 LABEL maintainer="Max Mecklin <max@meckl.in>"
 
 RUN apt-get update && \
-    apt-get -y --no-install-recommends install git gcc musl-dev python3-dev sudo bluetooth bluez blueman bluez-hcidump && \
+    apt-get -y --no-install-recommends install git gcc musl-dev python3-dev sudo bluez dbus bluez-hcidump && \
     rm -rf /var/lib/apt/lists/*
 
 COPY . /app
