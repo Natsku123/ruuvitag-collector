@@ -15,4 +15,5 @@ RUN pip3.11 install -r requirements.txt
 RUN pip3.11 install wheel
 RUN pip3.11 install git+https://github.com/ttu/ruuvitag-sensor.git
 
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["python3.11", "main.py"]
