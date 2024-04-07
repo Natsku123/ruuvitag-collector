@@ -1,3 +1,4 @@
+#!/bin/bash
 # start services
 sudo service dbus start
 sudo service bluetooth start
