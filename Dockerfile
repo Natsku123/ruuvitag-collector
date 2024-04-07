@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.11-slim-buster
 
 LABEL maintainer="Max Mecklin <max@meckl.in>"
 
@@ -10,9 +10,9 @@ COPY . /app
 
 WORKDIR /app
 
-RUN pip3.9 install -r requirements.txt
+RUN pip3.11 install -r requirements.txt
 
-RUN pip3.9 install wheel
-RUN pip3.9 install git+https://github.com/ttu/ruuvitag-sensor.git@migrate-rx-to-v3
+RUN pip3.11 install wheel
+RUN pip3.11 install git+https://github.com/ttu/ruuvitag-sensor.git@migrate-rx-to-v3
 
-CMD ["python3.9", "main.py"]
+CMD ["python3.11", "main.py"]
