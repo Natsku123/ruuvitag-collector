@@ -25,8 +25,8 @@ docker-build:
   script:
     - docker context create builder
     - docker buildx create builder --use
-    - docker buildx build --platform linux/amd64,linux/arm64 --pull -t "$DOCKER_IMAGE_NAME" .
-    - docker push "$DOCKER_IMAGE_NAME"
+    - docker buildx build --platform linux/amd64,linux/arm64 --pull -t "$DOCKER_IMAGE_NAME" --push .
+    #- docker push "$DOCKER_IMAGE_NAME"
     - |
       if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
         docker tag "$DOCKER_IMAGE_NAME" "$CI_REGISTRY_IMAGE:latest"
