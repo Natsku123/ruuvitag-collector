@@ -1,3 +1,5 @@
 .idea/
 venv/
 .env
+ruuvitag_sensor.log
+*.egg-info/
