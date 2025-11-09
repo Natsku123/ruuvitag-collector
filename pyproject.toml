@@ -1,0 +1,17 @@
+[project]
+name = "mecklin-ruuvi-station"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "influxdb-client[async]>=1.49.0",
+    "ruuvitag-sensor>=3.1.0",
+]
+
+[project.scripts]
+main = "main:main"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"

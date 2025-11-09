@@ -1,28 +1,19 @@
 import logging
-import os
 import signal
 
 import asyncio
-from datetime import datetime, timezone
+from datetime import datetime
 from multiprocessing import Manager
 from concurrent.futures import ProcessPoolExecutor
-
-
-from influxdb_client import InfluxDBClient, Point
-from influxdb_client.client.write_api import ASYNCHRONOUS
 
 from ruuvitag_sensor.ruuvi import RuuviTagSensor
 
 import ruuvitag_sensor.log
 
 ruuvitag_sensor.log.enable_console()
+ruuvitag_sensor.log.log.setLevel(logging.DEBUG)
 
-sensors = os.environ.get('SENSORS', '')\
-    .removeprefix('"').removesuffix('"').split(" ")
-
-client = InfluxDBClient.from_env_properties()
-
-bucket = os.environ.get('BUCKET', 'Ruuvi')
+sensors = ["F5:DB:67:37:D0:F6", "DB:B8:35:4E:77:77", "CC:4E:E4:36:9C:97", "FC:CF:09:35:0C:0A", "FE:C1:1B:EB:4A:68"]
 
 
 def handle_sigterm(sig, frame):
@@ -40,31 +31,8 @@ async def handle_data(received_data: dict):
     :return:
     """
     payload = received_data['data']
-    print(f"{payload=}")
     ruuvitag_sensor.log.log.info(f"Received from {received_data['mac']}.")
-
-    # Create a new point with tags for the device and data format
-    # Get data from data and insert into point
-    p = Point("temperature").tag("device", received_data['mac'])\
-        .tag("data_format", payload.get('data_format'))\
-        .field("temperature", payload.get('temperature'))\
-        .field("humidity", payload.get('humidity'))\
-        .field("pressure", payload.get('pressure'))\
-        .field("accelerationX", payload.get('acceleration_x'))\
-        .field("accelerationY", payload.get('acceleration_y'))\
-        .field("accelerationZ", payload.get('acceleration_z'))\
-        .field("batteryVoltage", payload.get('battery', 0)/1000.0)\
-        .field("txPower", payload.get('tx_power'))\
-        .field("movementCounter", payload.get('movement_counter'))\
-        .field("measurementSequenceNumber", payload.get('measurement_sequence_number'))\
-        .field("tagID", payload.get('tagID'))\
-        .field("rssi", payload.get('rssi'))\
-        .field("time", received_data.get('timestamp', datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')))
-    print(f"{p=}")
-    # Send data to InfluxDB
-    # with client.write_api(write_options=ASYNCHRONOUS) as write_api:
-        # res = write_api.write(bucket=bucket, record=p)
-        # res.get()
+    ruuvitag_sensor.log.log.debug(f"Payload: {payload}")
 
 
 async def handle_queue(queue):
@@ -98,6 +66,8 @@ def background_process(queue):
 
 
 def main():
+
+    ruuvitag_sensor.log.log.info("Starting...")
     m = Manager()
     q = m.Queue()
 
@@ -109,6 +79,7 @@ def main():
     except RuntimeError:
         loop = asyncio.new_event_loop()
 
+    ruuvitag_sensor.log.log.info("Started listening for data...")
     loop.run_until_complete(handle_queue(q))
 
 if __name__ == "__main__":
